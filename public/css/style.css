@@ -1,0 +1,36 @@
+.sudoku-container {
+    width: 450px;
+    height: 450px;
+    margin: auto;
+    margin-top: 5em;
+    margin-bottom: 5em;
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+}
+
+.emptyBlock {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    input {
+        width: 80%;
+        height: 80%;
+        text-align: center;
+        font-size: 1.2em;
+        border: 0;
+    }
+
+    p {
+        text-align: center;
+        font-size: 1.2em;
+        color: black;
+    }
+}
