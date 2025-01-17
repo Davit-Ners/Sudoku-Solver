@@ -153,12 +153,45 @@ function isAllowed(tab: number[][], nb: number, row: number, col: number): boole
     return isAllowedLigne(tab, nb, row, col) && isAllowedColonne(tab, nb, row, col) && isAllowedSquare(tab, nb, row, col);
 }
 
+function getEmptyCells(tab: number[][]): number[][] {
+    const emptyCells = [];
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (tab[i][j] == 0) {
+                emptyCells.push([i, j]);
+            }
+        }
+    }
+    return emptyCells;
+}
+
 creerGrile();
 
-// const solveSudoku(): void {
-//     let isSolved = false;
-//     let position = [0, 0];
-//     while (!isSolved) {
-        
-//     }
-// }
+function solveSudoku(tab: number[][]): boolean {
+    const emptyCells = getEmptyCells(tab);
+
+    if (emptyCells.length === 0) {
+        return true;
+    }
+
+    const [row, col] = emptyCells[0];
+
+    for (let num = 1; num <= 9; num++) {
+
+        if (isAllowed(tab, num, row, col)) {
+
+            tab[row][col] = num;
+
+
+            if (solveSudoku(tab)) {
+                return true;
+            }
+
+
+            tab[row][col] = 0;
+        }
+    }
+
+
+    return false;
+}
