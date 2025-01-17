@@ -37,3 +37,27 @@ function creerGrile(): void {
     }
 }
 
+function recupererInputs(): void {
+    for (let i = 0; i < 9; i++) {
+        tabSudoku.push([]);
+        for (let j = 0; j < 9; j++) {
+            const input: HTMLInputElement = document.getElementById(`i${i}-${j}`) as HTMLInputElement;
+            const p: HTMLParagraphElement = document.createElement('p');
+            p.id = `p${i}-${j}`;
+
+            if (!isNaN(input.valueAsNumber) && input.valueAsNumber > 0 && input.valueAsNumber < 10) {
+                tabSudoku[i].push(input.valueAsNumber);
+                p.textContent = input.valueAsNumber.toString();
+                input.remove();
+                document.getElementById(`${i}-${j}`)?.append(p);
+            }
+            else {
+                tabSudoku[i].push(0);
+                p.textContent = '';
+                input.remove();
+                document.getElementById(`${i}-${j}`)?.append(p);
+            }
+        }
+    }
+}
+
