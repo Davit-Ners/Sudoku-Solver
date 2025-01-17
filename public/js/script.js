@@ -83,7 +83,7 @@ function checkColonne(tab) {
     }
     return true;
 }
-function checkCarre(tab, nb) {
+function checkCarre(tab) {
     let lig = 0;
     for (let count = 0; count < 3; count++) {
         let col = 0;
@@ -107,6 +107,37 @@ function checkCarre(tab, nb) {
 }
 function checkSudoku(tab) {
     return checkCarre(tab) && checkColonne(tab) && checkLigne(tab);
+}
+function isAllowedLigne(tab, nb, row, col) {
+    for (let j = 0; j < 9; j++) {
+        if (j != col && tab[row][j] == nb) {
+            return false;
+        }
+    }
+    return true;
+}
+function isAllowedColonne(tab, nb, row, col) {
+    for (let j = 0; j < 9; j++) {
+        if (j != row && tab[col][j] == nb) {
+            return false;
+        }
+    }
+    return true;
+}
+function isAllowedSquare(tab, nb, row, col) {
+    let startRow = Math.floor(row / 3) * 3;
+    let startCol = Math.floor(col / 3) * 3;
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (tab[startRow + i][startCol + j] == nb) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+function isAllowed(tab, nb, row, col) {
+    return isAllowedLigne(tab, nb, row, col) && isAllowedColonne(tab, nb, row, col) && isAllowedSquare(tab, nb, row, col);
 }
 creerGrile();
 // const solveSudoku(): void {
