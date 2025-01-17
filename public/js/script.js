@@ -55,3 +55,63 @@ function recupererInputs() {
         }
     }
 }
+function checkLigne(tab) {
+    for (let ligne of tab) {
+        let nbDispo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        for (let block of ligne) {
+            if (nbDispo.indexOf(block) != -1) {
+                nbDispo[nbDispo.indexOf(block)] = 0;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+function checkColonne(tab) {
+    for (let i = 0; i < 9; i++) {
+        const nbDispo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        for (let j = 0; j < 9; j++) {
+            if (nbDispo.indexOf(tab[j][i]) != -1) {
+                nbDispo[nbDispo.indexOf(tab[j][i])] = 0;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+function checkCarre(tab, nb) {
+    let lig = 0;
+    for (let count = 0; count < 3; count++) {
+        let col = 0;
+        for (let i = 0; i < 3; i++) {
+            const nbDispo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            for (let j = 0 + lig; j < 3 + lig; j++) {
+                for (let k = 0 + col; k < 3 + col; k++) {
+                    if (nbDispo.indexOf(tab[j][k]) != -1) {
+                        nbDispo[nbDispo.indexOf(tab[j][k])] = 0;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
+            col += 3;
+        }
+        lig += 3;
+    }
+    return true;
+}
+function checkSudoku(tab) {
+    return checkCarre(tab) && checkColonne(tab) && checkLigne(tab);
+}
+creerGrile();
+// const solveSudoku(): void {
+//     let isSolved = false;
+//     let position = [0, 0];
+//     while (!isSolved) {
+//     }
+// }
