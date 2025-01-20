@@ -1,3 +1,5 @@
+// Resolveur de sudoku graçe au backtracking (brute force)
+
 // Reuperation DOM
 const grilleSudoku: HTMLDivElement = document.querySelector('#gilleSudoku') as HTMLDivElement;
 const startBtn: HTMLButtonElement = document.getElementById('start') as HTMLButtonElement;
@@ -15,7 +17,10 @@ let sudokuGridEx = [
     [2, 8, 7, 4, 1, 9, 6, 3, 5],
     [3, 4, 5, 2, 8, 6, 1, 7, 9]
 ];
+// Variable juste pou rvoir le nombre de rafraichissement effectués
+let solution = 0;
 
+// Fonction pour creer la grille de sudoku dans le DOM
 function creerGrile(): void {
     for (let i = 0; i < 9; i++) {
         const row = document.createElement('div');
@@ -45,6 +50,7 @@ function creerGrile(): void {
     }
 }
 
+// Fonctoin pour recuperer les chiffres entrés dans la grille de sudoku par l'utilisateur et les affichés dans une balise 'p'
 function recupererInputs(): void {
     for (let i = 0; i < 9; i++) {
         tabSudoku.push([]);
@@ -69,63 +75,7 @@ function recupererInputs(): void {
     }
 }
 
-function checkLigne(tab: number[][]): boolean {
-    for (let ligne of tab) {
-        let nbDispo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        for (let block of ligne) {
-            if (nbDispo.indexOf(block) != -1) {
-                nbDispo[nbDispo.indexOf(block)] = 0;
-            }
-            else {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function checkColonne(tab: number[][]): boolean {
-    for (let i = 0; i < 9; i++) {
-        const nbDispo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        for (let j = 0; j < 9; j++) {
-            if (nbDispo.indexOf(tab[j][i]) != -1) {
-                nbDispo[nbDispo.indexOf(tab[j][i])] = 0;
-            }
-            else {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-function checkCarre(tab: number[][]): boolean {
-    let lig = 0;
-    for (let count = 0; count < 3; count++) {
-        let col = 0;
-        for (let i = 0; i < 3; i++) {
-            const nbDispo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-            for (let j = 0 + lig; j < 3 + lig; j++) {
-                for (let k = 0 + col; k < 3 + col; k++) {
-                    if (nbDispo.indexOf(tab[j][k]) != -1) {
-                        nbDispo[nbDispo.indexOf(tab[j][k])] = 0;
-                    }
-                    else {
-                        return false;
-                    }
-                }
-            }
-            col += 3;
-        }
-        lig += 3;
-    }
-    return true;
-}
-
-function checkSudoku(tab: number[][]): boolean {
-    return checkCarre(tab) && checkColonne(tab) && checkLigne(tab);
-}
-
+// Fonction poour checker si le chiffre peut etre mis dans sa ligne
 function isAllowedLigne(tab: number[][], nb: number, row: number, col: number): boolean {
     for (let j = 0; j < 9; j++) {
         if (j != col && tab[row][j] == nb) {
@@ -135,6 +85,7 @@ function isAllowedLigne(tab: number[][], nb: number, row: number, col: number): 
     return true;
 }
 
+// Fonction poour checker si le chiffre peut etre mis dans sa colonne
 function isAllowedColonne(tab: number[][], nb: number, row: number, col: number): boolean {
     for (let j = 0; j < 9; j++) {
         if (j != row && tab[j][col] == nb) {
@@ -144,6 +95,7 @@ function isAllowedColonne(tab: number[][], nb: number, row: number, col: number)
     return true;
 }
 
+// Fonction poour checker si le chiffre peut etre mis dans son carré 3*3
 function isAllowedSquare(tab: number[][], nb: number, row: number, col: number): boolean {
     let startRow = Math.floor(row / 3) * 3;
     let startCol = Math.floor(col / 3) * 3;
@@ -157,10 +109,12 @@ function isAllowedSquare(tab: number[][], nb: number, row: number, col: number):
     return true;
 }
 
+// Fonction pour checker si le chiffre est valide dans tout le sudoku
 function isAllowed(tab: number[][], nb: number, row: number, col: number): boolean {
     return isAllowedLigne(tab, nb, row, col) && isAllowedColonne(tab, nb, row, col) && isAllowedSquare(tab, nb, row, col);
 }
 
+// Fonction pour avoir les cases vide à traiter de la grille de sudoku
 function getEmptyCells(tab: number[][]): number[][] {
     const emptyCells = [];
     for (let i = 0; i < 9; i++) {
@@ -173,6 +127,7 @@ function getEmptyCells(tab: number[][]): number[][] {
     return emptyCells;
 }
 
+// Fonction pour résoudre le sudoku en Backtracking
 async function solveSudoku(tab: number[][]): Promise<boolean> {
     const emptyCells = getEmptyCells(tab);
 
@@ -188,7 +143,7 @@ async function solveSudoku(tab: number[][]): Promise<boolean> {
 
             tab[row][col] = num;
 
-            await delay(0.5);
+            await delay(0.1);
             miseAJourDOM(tab);
 
 
@@ -205,10 +160,12 @@ async function solveSudoku(tab: number[][]): Promise<boolean> {
     return false;
 }
 
+// Fonction pour placer un delay
 async function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+// Fonction pour mettre a jour l'affichage de la grille de sudoku dans le DOM
 function miseAJourDOM(tab: number[][]): void {
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
@@ -218,10 +175,12 @@ function miseAJourDOM(tab: number[][]): void {
             }
         }
     }
+    solution++;
 }
 
 creerGrile();
 
+// Fonction principale pour lancer la résolution
 startBtn.addEventListener('click', function() {
     recupererInputs();
     solveSudoku(tabSudoku);
