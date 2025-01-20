@@ -27,6 +27,12 @@ function creerGrile() {
             input.className = 'inputNombre';
             input.id = `i${i}-${j}`;
             input.type = 'number';
+            if (j == 2 || j == 5) {
+                block.style.borderRight = '1px solid #ffffff';
+            }
+            if (i == 2 || i == 5) {
+                block.style.borderBottom = '1px solid #ffffff';
+            }
             block.append(input);
             row.append(block);
         }
@@ -48,7 +54,7 @@ function recupererInputs() {
             }
             else {
                 tabSudoku[i].push(0);
-                p.textContent = '';
+                p.textContent = '°';
                 input.remove();
                 document.getElementById(`${i}-${j}`)?.append(p);
             }
@@ -118,7 +124,7 @@ function isAllowedLigne(tab, nb, row, col) {
 }
 function isAllowedColonne(tab, nb, row, col) {
     for (let j = 0; j < 9; j++) {
-        if (j != row && tab[col][j] == nb) {
+        if (j != row && tab[j][col] == nb) {
             return false;
         }
     }
@@ -150,8 +156,7 @@ function getEmptyCells(tab) {
     }
     return emptyCells;
 }
-creerGrile();
-function solveSudoku(tab) {
+async function solveSudoku(tab) {
     const emptyCells = getEmptyCells(tab);
     if (emptyCells.length === 0) {
         return true;
@@ -160,7 +165,9 @@ function solveSudoku(tab) {
     for (let num = 1; num <= 9; num++) {
         if (isAllowed(tab, num, row, col)) {
             tab[row][col] = num;
-            if (solveSudoku(tab)) {
+            await delay(0.5);
+            miseAJourDOM(tab);
+            if (await solveSudoku(tab)) {
                 return true;
             }
             tab[row][col] = 0;
@@ -168,3 +175,21 @@ function solveSudoku(tab) {
     }
     return false;
 }
+async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+function miseAJourDOM(tab) {
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            const p = document.getElementById(`p${i}-${j}`);
+            if (tab[i][j] != 0) {
+                p.textContent = tab[i][j].toString();
+            }
+        }
+    }
+}
+creerGrile();
+startBtn.addEventListener('click', function () {
+    recupererInputs();
+    solveSudoku(tabSudoku);
+});
